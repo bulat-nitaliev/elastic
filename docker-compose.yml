@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14.6-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5484:5432
+
+  # elasticsearch:
+  #   image: elasticsearch:7.17.24
+  #   environment:
+  #     - discovery.type=single-node
+  #   ports:
+  #     - 9200:9200
+  #   volumes:
+  #     - esdata:/usr/share/elasticsearch/data
+
+  # app:
+  #   build: .
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - db
+  #     - elasticsearch
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:postgres@postgres/test_db
+  #     ELASTICSEARCH_URL: http://elasticsearch:9200
+
+volumes:
+  postgres_data:
+  # esdata:
