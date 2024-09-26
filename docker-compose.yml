@@ -10,7 +10,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5484:5432
+    networks:
+      - net
+    restart: unless-stopped
+    container_name: db
 
   elasticsearch:
     image: elasticsearch:7.17.24
@@ -20,6 +24,10 @@ services:
       - 9200:9200
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    networks:
+      - net
+    restart: unless-stopped
+    container_name: elasticsearch
 
   app:
     build: ./app
@@ -28,6 +36,14 @@ services:
     depends_on:
       - db
       - elasticsearch
+    networks:
+      - net
+    restart: unless-stopped
+    container_name: app
+
+networks:
+  net:
+    driver: bridge
 
 volumes:
   postgres_data:

@@ -1,5 +1,6 @@
 
 import psycopg2
+import uuid
 from lxml import etree
 
 
@@ -46,6 +47,9 @@ def update_sku(url,es):
             }
             response = es.search(index='sku', body=query)
             similar_uuids = [hit['_id'] for hit in response['hits']['hits'][:5]]
+            uuids = [uuid.UUID(str(sku)) for sku in similar_uuids]
+            print(similar_uuids)
+            print(uuids)
             # # print(similar_uuids)
             # l = tuple([i for _, i in similar_uuids])
         
@@ -59,4 +63,4 @@ def update_sku(url,es):
             # Обновление поля similar_sku
             cursor.execute("""
             UPDATE public.sku SET similar_sku = %s WHERE uuid = %s
-            """, (similar_uuids, product_uuid))
+            """, (uuids, product_uuid))

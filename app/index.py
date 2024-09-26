@@ -12,6 +12,9 @@ from decouple import config
 from db_create import create_db, generate_data, update_sku
 from elasticsearch.helpers import bulk
 
+
+time.sleep(20)
+
 path = config('PATH_XML')
 url = config('SQL_URL')
 url_elastic = config('ELASTICSEARCH_URL')
