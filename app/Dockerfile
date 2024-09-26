@@ -7,6 +7,6 @@ COPY requirements.txt /app/
 RUN apk add postgresql-client build-base postgresql-dev
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-COPY . .     
+COPY . . 
 
-CMD python3 index.py
+CMD ["python3" , "index.py"]
