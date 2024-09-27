@@ -46,21 +46,31 @@ def update_sku(url,es):
                 }
             }
             response = es.search(index='sku', body=query)
-            similar_uuids = [hit['_id'] for hit in response['hits']['hits'][:5]]
-            uuids = [uuid.UUID(str(sku)) for sku in similar_uuids]
-            print(similar_uuids)
-            print(uuids)
-            # # print(similar_uuids)
-            # l = tuple([i for _, i in similar_uuids])
-        
-            # q = f'''select uuid, title from sku where uuid in {l}'''
-            # cursor.execute(q)
-            # res = cursor.fetchall()
+            similar_uuids = [uuid.UUID(hit['_source']['uuid']) for hit in response['hits']['hits'][:5]]
+            q_s = f"""
+            UPDATE public.sku SET similar_sku = ARRAY{similar_uuids} WHERE uuid = '{product_uuid}'  """
             
+            cursor.execute(q_s)
             
 
+# class DictIterator:
+#     def __init__(self):
+#         self.data = []  
 
-            # Обновление поля similar_sku
-            cursor.execute("""
-            UPDATE public.sku SET similar_sku = %s WHERE uuid = %s
-            """, (uuids, product_uuid))
+#     def add(self, new_dict):
+#         """Добавляет новый словарь в итератор."""
+#         self.data.append(new_dict)
+
+#     def __iter__(self):
+#         """Возвращает итератор."""
+#         self.index = 0  
+#         return self
+
+#     def __next__(self):
+#         """Возвращает следующий элемент или вызывает StopIteration."""
+#         if self.index < len(self.data):
+#             result = self.data[self.index]
+#             self.index += 1
+#             return result
+#         else:
+#             raise StopIteration

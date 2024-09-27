@@ -13,17 +13,16 @@ from db_create import create_db, generate_data, update_sku
 from elasticsearch.helpers import bulk
 
 
-time.sleep(20)
+
 
 path = config('PATH_XML')
 url = config('SQL_URL')
 url_elastic = config('ELASTICSEARCH_URL')
 es = Elasticsearch(url_elastic)
-# engine = create_engine(url)
 start = time.perf_counter()
 
 print(path)
-l,count = [], 0
+count, l =  0, []
 # create_db(path, url, query_create)
 with psycopg2.connect(url)as conn:
     cur = conn.cursor()
@@ -101,8 +100,9 @@ for event, elem in etree.iterparse(path, tag='offer'):
             ),
         }
         
+        # l = DictIterator()
         l.append(data)
-
+        
         if len(l) == 100000:
             count += 100000
             print(count, 'read -> write')
