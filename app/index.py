@@ -22,7 +22,7 @@ es = Elasticsearch(url_elastic)
 start = time.perf_counter()
 
 print(path)
-count, l =  0, []
+count, lst_data =  0, []
 # create_db(path, url, query_create)
 with psycopg2.connect(url)as conn:
     cur = conn.cursor()
@@ -101,12 +101,12 @@ for event, elem in etree.iterparse(path, tag='offer'):
         }
         
         # l = DictIterator()
-        l.append(data)
+        lst_data.append(data)
         
-        if len(l) == 100000:
+        if len(lst_data) == 100000:
             count += 100000
             print(count, 'read -> write')
-            df = pd.DataFrame(l)
+            df = pd.DataFrame(lst_data)
             json_str = df.to_json(orient='records')
 
             json_records = json.loads(json_str)
@@ -114,13 +114,13 @@ for event, elem in etree.iterparse(path, tag='offer'):
             print(f"Успешно записано {success} документов.")
             with psycopg2.connect(url)as conn:
                 cur = conn.cursor()
-                l_l = (tuple(v.values()) for v in l)
-                l = []
+                l_l = (tuple(v.values()) for v in lst_data)
+                lst_data = []
                 psycopg2.extras.execute_batch(cur, query_insert_sku, l_l, page_size=1000)
                 
 
 
-df = pd.DataFrame(l)
+df = pd.DataFrame(lst_data)
 json_str = df.to_json(orient='records')
 
 json_records = json.loads(json_str)
@@ -129,10 +129,10 @@ print(f"Успешно записано {success} документов.")
 
 with psycopg2.connect(url)as conn:
     cur = conn.cursor()
-    l_l = (tuple(v.values()) for v in l)
+    l_l = (tuple(v.values()) for v in lst_data)
     psycopg2.extras.execute_batch( cur, query_insert_sku, l_l, page_size=1000)
    
-count += len(l)
+count += len(lst_data)
 print(count, 'read -> write')
 
           

@@ -4,12 +4,23 @@
 
 ## Getting Started <a name = "getting_started"></a>
 
-add a file elektronika_products_20240924_135723.xml to the app folder
+
+
+add a file elektronika_products_20240924_135723.xml to the app folder 
+
+add your variables for the database and file name to the .env file
 
 
 
 ### Installing
 
+```
+git clone https://github.com/bulat-nitaliev/elastic.git
+```
+
+```
+cd elastic 
+```
 
 
 ```
